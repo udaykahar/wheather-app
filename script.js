@@ -11,6 +11,56 @@ wrapperNews = document.querySelector(".wrapper-news");
 
 const your_api_key = "3045dd712ffe6e702e3245525ac7fa38";
 
+//News Section
+console.log("This is my index js file");
+
+// Initialize the news api parameters
+let source = 'the-times-of-india';
+let apiKey = '8cc7fbd58d3144c68d6b2a6965645f48'
+
+// Grab the news container
+let newsAccordion = document.getElementById('newsAccordion');
+
+// Create an ajax get request
+const xhr = new XMLHttpRequest();
+xhr.open('GET', `https://newsapi.org/v2/everything?q=mumbai&from=2022-11-06&sortBy=popularity&apiKey=${apiKey}`, true);
+
+// What to do when response is ready
+xhr.onload = function () {
+    if (this.status === 200) {
+        let json = JSON.parse(this.responseText);
+        let articles = json.articles;
+        console.log(articles);
+        let newsHtml = "";
+        articles.forEach(function(element, index) {
+            // console.log(element, index)
+            let news = `<div class="card">
+                            <div class="card-header" id="heading${index}">
+                                <h2 class="mb-0">
+                                <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapse${index}"
+                                    aria-expanded="false" aria-controls="collapse${index}">
+                                   <b>Breaking News ${index+1}:</b> ${element["title"]}
+                                </button>
+                                </h2>
+                            </div>
+
+                            <div id="collapse${index}" class="" aria-labelledby="heading${index}" data-parent="#newsAccordion">
+                                <div class="card-body"> ${element["content"]}. <a href="${element['url']}" target="_blank" >Read more here</a>  </div>
+                            </div>
+                        </div>;`
+            newsHtml += news;
+        });
+        newsAccordion.innerHTML = newsHtml;
+    }
+    else {
+        console.log("Some error occured")
+    }
+}
+
+xhr.send()
+
+// news sectionn end
+
 inputField.addEventListener("keyup", e =>{
     // if user pressed enter btn and input value is not empty
     if(e.key == "Enter" && inputField.value != ""){
@@ -37,6 +87,7 @@ function onSuccess(position){
     const {latitude, longitude} = position.coords; // getting lat and lon of the user device from coords obj
     api = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=metric&appid=${your_api_key}`;
     fetchData();
+    getData();
 }
 
 function onError(error){
@@ -73,20 +124,42 @@ const getDatafor7days = async (latitude, longitude) => {
     try {
       let res = await fetch(url);
       let data = await res.json();
-      console.log("data", data);
-        
+      
       for (let i = 0; i < 8; i++) {
         console.log(data.daily[i].temp.max);
-        wrapperForcast.querySelector(`.card${i} .max`).innerText = Math.floor(data.daily[i].temp.max);
+      
+        // display day name and icon
+        let date = new Date(data.daily[i].dt * 1000);
+        let day = date.getDay();
+        let dayName = "";
+        switch (day) {
+            case 0:
+                dayName = "Sun";
+                break;
+            case 1:
+                dayName = "Mon";
+                break;
+            case 2:
+                dayName = "Tue";
+                break;
+            case 3:
+                dayName = "Wed";
+                break;
+            case 4:
+                dayName = "Thu";
+                break;
+            case 5:
+                dayName = "Fri";
+                break;
+            case 6:
+                dayName = "Sat";
+                break;
+        }
+        wrapperForcast.querySelector(`.card${i} .day`).innerText = dayName;
+        wrapperForcast.querySelector(`.card${i} .max`).innerText = `max - ${Math.floor(data.daily[i].temp.max)}`;
+        wrapperForcast.querySelector(`.card${i} .min`).innerText = `min - ${Math.floor(data.daily[i].temp.min)}`;
       }
-        let dailyMaxTemp = data.daily[0].temp.max;
-        let dailyMinTemp = data.daily[0].temp.min;
-
-       
-
-        // passsing weather info to forecast section
         
-        wrapperNews.querySelector(`.heading`).innerText = `${city}, ${country}+ News`;
     } catch (error) {
       console.log(error);
     }
@@ -123,6 +196,7 @@ function weatherDetails(info){
         }
         
         //passing a particular weather info to a particular element
+        wrapperNews.querySelector(`.heading`).innerText = `${city} News`;
         weatherPart.querySelector(".temp .numb").innerText = Math.floor(temp);
         weatherPart.querySelector(".weather").innerText = description;
         weatherPart.querySelector(".location span").innerText = `${city}, ${country}`;
