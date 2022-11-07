@@ -12,9 +12,9 @@
 
   </head>
   <body>
-    <div class="flex gap-8">
+    <div class="flex gap-8 flex-col md:flex-row">
     <div class="wrapper-forecast ">
-      <header class="heading">Weather Forecast</header>
+      <header class="heading bg-[#fff] rounded-md ">Weather Forecast</header>
       <div class="cards grid gap-8 grid-cols-2 m-8">
       <div class="card card0 flex flex-col justify-center items-center p-4 rounded">
         <span class="day"></span>
@@ -93,7 +93,9 @@
     <div class="wrapper-news">
       <header class="heading">News</header>
       <div class="container my-3">
-        <div class="accordion" id="newsAccordion" style="overflow: hidden; overflow-y: scroll; height: 390px;" ></div>
+        <div class="accordion" id="newsAccordion" style="overflow: hidden; overflow-y: scroll; height: 390px;" >
+        
+        </div>
       </div>
     </div>
   </div>

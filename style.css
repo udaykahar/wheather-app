@@ -40,7 +40,7 @@ border: 1px solid rgba( 255, 255, 255, 0.18 );
   display: flex;
   font-size: 21px;
   font-weight: 500;
-  color: #43AFFC;
+  color: #bf6840;
   padding: 16px 15px;
   align-items: center;
   border-bottom: 1px solid #ccc;
@@ -91,13 +91,14 @@ header i{
 .input-part input{
   text-align: center;
   padding: 0 15px;
+  background-color: transparent;
   border: 1px solid #ccc;
 }
 .input-part input:is(:focus, :valid){
   border: 2px solid #43AFFC;
 }
 .input-part input::placeholder{
-  color: #bfbfbf;
+  color: #353535;
 }
 .input-part .separator{
   height: 1px;
