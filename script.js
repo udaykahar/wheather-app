@@ -11,62 +11,15 @@ wrapperNews = document.querySelector(".wrapper-news");
 
 const your_api_key = "3045dd712ffe6e702e3245525ac7fa38";
 
-//News Section
-console.log("This is my index js file");
-
-// Initialize the news api parameters
-let source = 'the-times-of-india';
-let apiKey = '8cc7fbd58d3144c68d6b2a6965645f48'
-
-// Grab the news container
-let newsAccordion = document.getElementById('newsAccordion');
-
-// Create an ajax get request
-const xhr = new XMLHttpRequest();
-xhr.open('GET', `https://newsapi.org/v2/everything?q=mumbai&from=2022-11-06&sortBy=popularity&apiKey=${apiKey}`, true);
-
-// What to do when response is ready
-xhr.onload = function () {
-    if (this.status === 200) {
-        let json = JSON.parse(this.responseText);
-        let articles = json.articles;
-        console.log(articles);
-        let newsHtml = "";
-        articles.forEach(function(element, index) {
-            // console.log(element, index)
-            let news = `<div class="card">
-                            <div class="card-header" id="heading${index}">
-                                <h2 class="mb-0">
-                                <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapse${index}"
-                                    aria-expanded="false" aria-controls="collapse${index}">
-                                   <b>Breaking News ${index+1}:</b> ${element["title"]}
-                                </button>
-                                </h2>
-                            </div>
-
-                            <div id="collapse${index}" class="" aria-labelledby="heading${index}" data-parent="#newsAccordion">
-                                <div class="card-body"> ${element["content"]}. <a href="${element['url']}" target="_blank" >Read more here</a>  </div>
-                            </div>
-                        </div>;`
-            newsHtml += news;
-        });
-        newsAccordion.innerHTML = newsHtml;
-    }
-    else {
-        console.log("Some error occured")
-    }
-}
-
-xhr.send()
-
-// news sectionn end
 
 inputField.addEventListener("keyup", e =>{
     // if user pressed enter btn and input value is not empty
     if(e.key == "Enter" && inputField.value != ""){
         requestApi(inputField.value);
+        getNews(inputField.value);
     }
 });
+
 
 locationBtn.addEventListener("click", () =>{
     if(navigator.geolocation){ // if browser support geolocation api
@@ -88,6 +41,10 @@ function onSuccess(position){
     api = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=metric&appid=${your_api_key}`;
     fetchData();
     getData();
+    // converting lat and lon into CITY name
+    fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`).then(res => res.json()).then(data =>{
+        getNews(data.city);
+    });
 }
 
 function onError(error){
@@ -164,6 +121,68 @@ const getDatafor7days = async (latitude, longitude) => {
       console.log(error);
     }
   };
+
+//   news function using ajax
+
+function getNews(city) {
+    
+//News Section
+// Initialize the news api parameters
+let source = 'the-times-of-india';
+let apiKey = '8cc7fbd58d3144c68d6b2a6965645f48'
+
+// Grab the news container
+let newsAccordion = document.getElementById('newsAccordion');
+
+console.log(city);
+// Create an ajax get request
+const xhr = new XMLHttpRequest();
+xhr.open('GET', `https://newsapi.org/v2/everything?q=${city}&from=2022-11-06&sortBy=popularity&apiKey=${apiKey}`, true);
+
+// What to do when response is ready
+xhr.onload = function () {
+    if (this.status === 200) {
+        let json = JSON.parse(this.responseText);
+        let articles = json.articles;
+        let images = json.articles[0].content;
+        console.log(articles);
+        console.log(images);
+        let newsHtml = "";
+        articles.forEach(function(element, index) {
+            // console.log(element, index)
+            if(index > 4){
+                return;
+            }
+                
+            let news = `<div class="card">
+                            <div class="card-header" id="heading${index}">
+                                <h2 class="mb-0">
+                                <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapse${index}"
+                                    aria-expanded="false" aria-controls="collapse${index}">
+                                    <img src="${element["urlToImage"]}" alt="..." class="img-fluid ">
+                                   <b>Breaking News ${index+1}:</b> ${element["title"]}
+                                </button>
+                                </h2>
+                            </div>
+
+                            <div id="collapse${index}" class="" aria-labelledby="heading${index}" data-parent="#newsAccordion">
+                                <div class="card-body"> <a href="${element['url']}" target="_blank" >Read more here</a>  </div>
+                            </div>
+                        </div>`
+            newsHtml += news;
+        });
+        newsAccordion.innerHTML = newsHtml;
+    }
+    else {
+        console.log("Some error occured")
+    }
+}
+
+xhr.send()
+
+}
+    
+
 
 function weatherDetails(info){
     if(info.cod == "404"){ // if user entered city name isn't valid

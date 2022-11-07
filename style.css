@@ -11,7 +11,8 @@ body{
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background: #43AFFC;
+  /* background: #43AFFC; */
+  background-image: linear-gradient(to right top, #d16ba5, #c777b9, #ba83ca, #aa8fd8, #9a9ae1, #8aa7ec, #79b3f4, #69bff8, #52cffe, #41dfff, #46eefa, #5ffbf1);
 }
 ::selection{
   color: #fff;
@@ -22,6 +23,18 @@ body{
   background: #fff;
   border-radius: 7px;
   box-shadow: 7px 7px 20px rgba(0, 0, 0, 0.05);
+background: rgba( 255, 255, 255, 0.25 );
+box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+backdrop-filter: blur( 4px );
+-webkit-backdrop-filter: blur( 4px );
+border-radius: 10px;
+border: 1px solid rgba( 255, 255, 255, 0.18 );
+}
+.card{
+  background: rgba( 255, 255, 255, 0.25 );
+-webkit-backdrop-filter: blur( 4px );
+border-radius: 10px;
+border: 1px solid rgba( 255, 255, 255, 0.18 );
 }
 .wrapper header,.heading{
   display: flex;
