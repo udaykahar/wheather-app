@@ -113,8 +113,9 @@ const getDatafor7days = async (latitude, longitude) => {
                 break;
         }
         wrapperForcast.querySelector(`.card${i} .day`).innerText = dayName;
-        wrapperForcast.querySelector(`.card${i} .max`).innerText = `max - ${Math.floor(data.daily[i].temp.max)}`;
-        wrapperForcast.querySelector(`.card${i} .min`).innerText = `min - ${Math.floor(data.daily[i].temp.min)}`;
+        wrapperForcast.querySelector(`.card${i} .icon`).src = `https://openweathermap.org/img/wn/${data.daily[i].weather[0].icon}.png`;
+        wrapperForcast.querySelector(`.card${i} .max`).innerText = `${Math.floor(data.daily[i].temp.max)}°`;
+        wrapperForcast.querySelector(`.card${i} .min`).innerText = `${Math.floor(data.daily[i].temp.min)}°`;
       }
         
     } catch (error) {
@@ -154,19 +155,20 @@ xhr.onload = function () {
                 return;
             }
                 
-            let news = `<div class="card">
+            let news = `<div class="card p-2 m-2 ">
                             <div class="card-header" id="heading${index}">
-                                <h2 class="mb-0">
-                                <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapse${index}"
+                            <a href="${element['url']}" target="_blank" >
+                                <h2 class="mb-2">
+                                <button class="btn btn-link collapsed"  type="button" data-toggle="collapse" data-target="#collapse${index}"
                                     aria-expanded="false" aria-controls="collapse${index}">
-                                    <img src="${element["urlToImage"]}" alt="..." class="img-fluid ">
-                                   <b>Breaking News ${index+1}:</b> ${element["title"]}
+                                    <img src="${element["urlToImage"]}" alt="..." class="img-fluid "><p class="text-justify">
+                                   <b>Breaking News ${index+1}:</b>  ${element["title"]} </p>
                                 </button>
                                 </h2>
                             </div>
 
                             <div id="collapse${index}" class="" aria-labelledby="heading${index}" data-parent="#newsAccordion">
-                                <div class="card-body"> <a href="${element['url']}" target="_blank" >Read more here</a>  </div>
+                                </a> 
                             </div>
                         </div>`
             newsHtml += news;
